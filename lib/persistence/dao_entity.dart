@@ -1,5 +1,5 @@
 
-import 'package:floor/floor.dart';
+/* import 'package:floor/floor.dart';
 import 'package:segunda_prova/domain/coffee.dart';
 
 @dao
@@ -35,4 +35,4 @@ abstract class DAOcoffee{
   @delete
   Future<void> deleteCoffee(Coffee coffee);
 
-}
+} */

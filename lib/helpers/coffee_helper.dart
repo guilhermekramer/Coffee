@@ -1,28 +1,27 @@
-import 'package:floor/floor.dart';
-import 'package:segunda_prova/domain/coffee.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:segunda_prova/domain/coffee.dart'; 
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-
-class LivroHelper {
+class CoffeeHelper {
   //singleton
   //construtor interno
-  static final LivroHelper _instance = LivroHelper.internal();
+  static final CoffeeHelper _instance = CoffeeHelper.internal(); 
 
   //criação do factory para retornar a instância
-  factory LivroHelper() => _instance;
+  factory CoffeeHelper() => _instance;
 
   //LivroHelper.instance
-  LivroHelper.internal();
+  CoffeeHelper.internal();
 
   Database? _db;
 
   Future<Database?> get db async {
     if (_db == null) _db = await initDb();
+      print("deu certo criar o banco");
     return _db;
   }
 
-  /*Future<Database> initDb() async {
+  Future<Database> initDb() async {
     String? databasesPath = await getDatabasesPath();
     if (databasesPath == null) databasesPath = "";
     String path = join(databasesPath, "livros.db");
@@ -30,97 +29,121 @@ class LivroHelper {
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int newerVersion) async {
           await db.execute(
-              "CREATE TABLE ${Coffee.//}(${Coffee.id} INTEGER PRIMARY KEY , "
-                  "                                 ${Coffee.name} TEXT, "
-                  "                                 ${Coffee.price} INTEGER, "
-                  "                                 ${Coffee.roast} TEXT, "
-                  "                                 ${Coffee.sensory} TEXT) ");
+              "CREATE TABLE ${Coffee.tableName}(${Coffee.idValue} INTEGER PRIMARY KEY AUTOINCREMENT, "
+                  "                                 ${Coffee.coffeeValue} TEXT, "
+                  "                                 ${Coffee.priceValue} REAL, "
+                  "                                 ${Coffee.roastValue} TEXT, "
+                  "                                 ${Coffee.sensoryValue} TEXT, "
+                  "                                 ${Coffee.regionValue} TEXT) ");
         });
-  }*/
 
-
-
-Future<Database> initDb() async {
-  String? databasesPath = await getDatabasesPath();
-  if (databasesPath == null) databasesPath = "";
-  String path = join(databasesPath, "livros.db");
-
-  return await openDatabase(path, version: 1,
-      onCreate: (Database db, int newerVersion) async {git commit -m "first commit"
-        await db.execute(
-            "CREATE TABLE ${Coffee.tableName}("
-                "${Coffee.id} INTEGER PRIMARY KEY, "
-                "${Coffee.name} TEXT, "
-                "${Coffee.price} REAL, "
-                "${Coffee.roast} TEXT, "
-                "${Coffee.sensory} TEXT, "
-                "${Coffee.region} TEXT) ");
-      },
-      onConfigure: (Database db) async {
-        await db.execute('PRAGMA foreign_keys = ON');
-      });
-}
-
-  Future<Livro> saveLivro(Livro l) async {
-    Database? dbLivro = await db;
-    if (dbLivro != null) {
-      l.id = await dbLivro.insert(Livro.livroTable, l.toMap());
-    }
-    return l;
+        
   }
 
-  Future<Livro?> getLivro(int id) async {
+  Future<Coffee> saveCoffee(Coffee e) async {
+    Database? dbCoffee = await db;
+    if (dbCoffee != null) {
+      await dbCoffee.insert(Coffee.tableName, e.toMap());
+      print("salvou legal no banco o café");
+    }
+    return e;
+  }
+
+  Future<Coffee?> getCoffee(int id) async {
     Database? dbLivro = await db;
     if (dbLivro != null) {
-      List<Map> maps = await dbLivro.query(Livro.livroTable,
+      List<Map> maps = await dbLivro.query(Coffee.tableName,
           columns: [
-            Livro.idColumn,
-            Livro.tituloColumn,
-            Livro.autorColumn,
-            Livro.anoPublicacaoColumn,
-            Livro.avaliacaoColumn
+            Coffee.idValue,
+            Coffee.coffeeValue,
+            Coffee.priceValue,
+            Coffee.roastValue,
+            Coffee.sensoryValue,
+            Coffee.regionValue
           ],
-          where: "${Livro.idColumn} = ?",
+          where: "${Coffee.idValue} = ?",
           whereArgs: [id]);
-      if (maps.length > 0)
-        return Livro.fromMap(maps.first);
-      else
+      if (maps.isNotEmpty) {
+        return Coffee.fromMap(maps.first); 
+      } else {
         return null;
+      }
     }
     return null;
   }
 
-  Future<int> deleteLivro(int id) async {
-    Database? dbLivro = await db;
-    if (dbLivro!= null) {
-      return await dbLivro.delete(Livro.livroTable,
-          where: "${Livro.idColumn} = ?", whereArgs: [id]);
-    } else
-      return 0;
-  }
-
-  Future<int> updateLivro(Livro l) async {
-    Database? dbLivro = await db;
-    if (dbLivro != null) {
-      return await dbLivro.update(Livro.livroTable, l.toMap(),
-          where: "${Livro.idColumn} = ?", whereArgs: [l.id]);
+  
+  Future<int> deleteCoffee(int id) async {
+    Database? dbCoffee = await db;
+    if (dbCoffee!= null) {
+      return await dbCoffee.delete(Coffee.tableName,
+          where: "${Coffee.idValue} = ?", whereArgs: [id]);
     } else {
       return 0;
     }
   }
 
-  Future<List> getAll() async {
-    Database? dbLivro = await db;
-    if (dbLivro != null) {
-      List listMap = await dbLivro.query(Livro.livroTable);
-      List<Livro> listLivros = [];
-
-      for (Map m in listMap) {
-        listLivros.add(Livro.fromMap(m));
-      }
-      return listLivros;
+/*   Future<Object> updateCoffee(Coffee e) async {
+    Database? dbCoffee = await db;
+    if (dbCoffee != null) {
+      print("deu certo atualizar ");
+      await dbCoffee.update(Coffee.tableName, e.toMap(),
+          where: "${Coffee.idValue} = ?", whereArgs: [e.id]);
+      int idDoCafeQueVoceAtualizou = e.id; 
+      Coffee? cafeAtualizado = await getCoffee(idDoCafeQueVoceAtualizou);
+      print(cafeAtualizado?.name);
+      return cafeAtualizado ?? 0;
     } else {
-      return [];
+      return 0;
     }
+    
+  } */
+
+  
+/*   Future<Object> updateCoffee(Coffee e) async {
+    Database? dbCoffee = await db;
+    if (dbCoffee != null) {
+      print("deu certo atualizar ");
+      
+      return await dbCoffee.update(Coffee.tableName, e.toMap(),
+          where: "${Coffee.idValue} = ?", whereArgs: [e.id]);;
+
+    } else {
+      print("deu errado update");
+      return 0;
+    }
+    
   }
+ */
+
+ Future<int> updateCoffee(Coffee e) async {
+  Database? dbCoffee = await db;
+  if (dbCoffee != null) {
+    return await dbCoffee.update(
+      Coffee.tableName,
+      e.toMap(),
+      where: "${Coffee.idValue} = ?",
+      whereArgs: [e.id],
+    );
+  } else {
+    return 0;
+  }
+}
+
+
+  Future<List<Coffee>> getAll() async {
+  Database? dbCoffee = await db;
+  if (dbCoffee != null) {
+    List<Map<String, dynamic>> listMap = await dbCoffee.query(Coffee.tableName);
+    List<Coffee> listCoffees = [];
+
+    for (Map<String, dynamic> m in listMap) {
+      listCoffees.add(Coffee.fromMap(m));
+    }
+    return listCoffees;
+  } else {
+    return [];
+  }
+}
+
 }
