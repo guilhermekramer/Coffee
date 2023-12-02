@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:segunda_prova/domain/coffee.dart';
 
 class TelaHome extends StatelessWidget {
 
