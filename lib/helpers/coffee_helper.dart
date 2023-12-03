@@ -83,38 +83,6 @@ class CoffeeHelper {
     }
   }
 
-/*   Future<Object> updateCoffee(Coffee e) async {
-    Database? dbCoffee = await db;
-    if (dbCoffee != null) {
-      print("deu certo atualizar ");
-      await dbCoffee.update(Coffee.tableName, e.toMap(),
-          where: "${Coffee.idValue} = ?", whereArgs: [e.id]);
-      int idDoCafeQueVoceAtualizou = e.id; 
-      Coffee? cafeAtualizado = await getCoffee(idDoCafeQueVoceAtualizou);
-      print(cafeAtualizado?.name);
-      return cafeAtualizado ?? 0;
-    } else {
-      return 0;
-    }
-    
-  } */
-
-  
-/*   Future<Object> updateCoffee(Coffee e) async {
-    Database? dbCoffee = await db;
-    if (dbCoffee != null) {
-      print("deu certo atualizar ");
-      
-      return await dbCoffee.update(Coffee.tableName, e.toMap(),
-          where: "${Coffee.idValue} = ?", whereArgs: [e.id]);;
-
-    } else {
-      print("deu errado update");
-      return 0;
-    }
-    
-  }
- */
 
  Future<int> updateCoffee(Coffee e) async {
   Database? dbCoffee = await db;
@@ -131,7 +99,7 @@ class CoffeeHelper {
 }
 
 
-  Future<List<Coffee>> getAll() async {
+Future<List<Coffee>> getAll() async {
   Database? dbCoffee = await db;
   if (dbCoffee != null) {
     List<Map<String, dynamic>> listMap = await dbCoffee.query(Coffee.tableName);

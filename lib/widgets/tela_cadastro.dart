@@ -37,7 +37,7 @@ class _FormCadastroState extends State<FormCadastro> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
+      child: Column( //RESPOSTA QUESTÃO 5
         children: [
           TextFormField(
             //FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR FALTA ESTILIZAR 
@@ -96,8 +96,14 @@ class _FormCadastroState extends State<FormCadastro> {
                 MaterialPageRoute(builder: (context) => const TelaHome()),
                 (route) => false,
               );
-              
-            }, child: const Text('Enviar'),
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Café Cadastrado com sucesso!'),
+                    ),
+              );
+                           
+            }, child: const Text('Cadastrar'),
         ),
         ],
       ),

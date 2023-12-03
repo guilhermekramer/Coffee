@@ -29,17 +29,6 @@ class Coffee{
 
   get outroAtributo => null;
 
-/*   factory Coffee.fromMap(Map<String, dynamic> map) {
-  return Coffee(
-    map['id'] as int,
-    map['coffee'] as String,
-    map['price'] as double,
-    map['roast'] as String,
-    map['sensory'] as String,
-    map['region'] as String,
-  );
-} */
-   
 
    
   Map<String, dynamic> toMap() {
